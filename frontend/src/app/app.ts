@@ -1,12 +1,26 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
 
+import { IncidentsService } from './core/services/incidents-service';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
   templateUrl: './app.html',
-  styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('frontend');
+export class App implements OnInit {
+
+  private incidentsService = inject(IncidentsService);
+
+  ngOnInit(): void {
+
+    this.incidentsService.getIncidents()
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+        },
+
+        error: (err) => {
+          console.error(err);
+        },
+      });
+  }
 }
