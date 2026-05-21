@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { IncidentStore } from './core/store/indcidents.store';
 
-import { IncidentsService } from './core/services/incidents-service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -8,19 +8,9 @@ import { IncidentsService } from './core/services/incidents-service';
 })
 export class App implements OnInit {
 
-  private incidentsService = inject(IncidentsService);
+  incidentStore = inject(IncidentStore)
 
   ngOnInit(): void {
-
-    this.incidentsService.getIncidents()
-      .subscribe({
-        next: (data) => {
-          console.log(data);
-        },
-
-        error: (err) => {
-          console.error(err);
-        },
-      });
+    this.incidentStore.loadIncidents();
   }
 }

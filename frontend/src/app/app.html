@@ -1,1 +1,32 @@
+@if (incidentStore.isLoading()) {
+  <h1>Загрузка...</h1>
+}
 
+@if (incidentStore.error()) {
+  <h2>{{incidentStore.error}}</h2>
+}
+
+<table>
+  <thead>
+    <tr></tr>
+  </thead>
+  <tbody>
+    @for(incident of incidentStore.incidents(); track incident.id) {
+      <tr>
+        @for (data in incident)
+      </tr>
+    }
+  </tbody>
+</table>
+
+@for (incident of incidentStore.incidents(); track incident.id) {
+
+  <div>
+
+    <h3>{{ incident.title }}</h3>
+
+    <p>{{ incident.severity }}</p>
+
+  </div>
+
+}
