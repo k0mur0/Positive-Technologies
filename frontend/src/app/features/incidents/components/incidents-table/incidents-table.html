@@ -1,1 +1,35 @@
-<p>incidents-table works!</p>
+<table
+  mat-table
+  [dataSource]="incidents()"
+  class="mat-elevation-z2"
+>
+
+  @for (column of displayedColumns; track column) {
+
+    <ng-container [matColumnDef]="column">
+
+      <th mat-header-cell *matHeaderCellDef>
+        {{ column }}
+      </th>
+
+      <td mat-cell *matCellDef="let row" class="cursor-pointer">
+
+        {{ formatValue(row, column) }}
+
+      </td>
+
+    </ng-container>
+
+  }
+
+  <tr
+    mat-header-row
+    *matHeaderRowDef="displayedColumns">
+  </tr>
+
+  <tr
+    mat-row
+    *matRowDef="let row; columns: displayedColumns">
+  </tr>
+
+</table>
