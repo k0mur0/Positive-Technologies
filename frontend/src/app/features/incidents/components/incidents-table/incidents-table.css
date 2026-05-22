@@ -1,13 +1,48 @@
+.incidents-table {
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px 8px 0 0;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
 table {
   width: 100%;
+  background: #ffffff;
 }
 
 th {
   font-weight: 600;
   text-transform: capitalize;
+  color: #374151;
+  background: #f9fafb;
 }
 
 td,
 th {
   padding: 12px;
+}
+
+td {
+  color: #111827;
+}
+
+tr.mat-mdc-row:hover {
+  background: #fafafa;
+}
+
+.paginator-shell {
+  display: flex;
+  justify-content: flex-end;
+  border: 1px solid #e5e7eb;
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+mat-paginator {
+  width: 100%;
+  background: #ffffff;
+  color: #374151;
 }

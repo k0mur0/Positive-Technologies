@@ -5,8 +5,18 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent }
 from '@angular/material/paginator';
 
+import { MatCheckboxModule }
+from '@angular/material/checkbox';
+
+import { MatButtonModule }
+from '@angular/material/button';
+
+import { MatMenuModule }
+from '@angular/material/menu';
+
 import { IncidentStore } from '../../../../core/store/incidents.store';
 import { SecurityIncident } from '../../../../core/models/security-incident';
+import { INCIDENT_COLUMNS } from '../../../../core/models/incident-collumns';
 
 @Component({
   selector: 'app-incidents-table',
@@ -16,6 +26,9 @@ import { SecurityIncident } from '../../../../core/models/security-incident';
     CommonModule,
     MatTableModule,
     MatPaginatorModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatMenuModule
   ],
 
   styleUrl: './incidents-table.css',
@@ -26,14 +39,8 @@ export class IncidentsTableComponent {
 
   store = inject(IncidentStore);
 
-  displayedColumns: (keyof SecurityIncident)[] = [
-    'id',
-    'title',
-    'severity',
-    'status',
-    'attackType',
-    'assignedTo',
-  ];
+  readonly displayedColumns = this.store.displayedColumns;
+  readonly allColumns = INCIDENT_COLUMNS;
 
   incidents = computed(() => this.store.incidents());
 
@@ -51,7 +58,7 @@ export class IncidentsTableComponent {
     if (Array.isArray(value)) {
       return value.join(', ');
     }
-    
+
     return String(value);
   }
 

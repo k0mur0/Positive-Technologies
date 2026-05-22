@@ -1,3 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: #f6f7f9;
+}
+
+.cdk-overlay-container {
+  z-index: 1000;
+}
+
+.cdk-overlay-pane div.mat-mdc-select-panel {
+  background: var(--mat-select-panel-background-color, #ffffff);
+  color: var(--mat-sys-on-surface, #1f2937);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 8px;
+  box-shadow:
+    0 16px 40px rgba(15, 23, 42, 0.16),
+    0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.cdk-overlay-pane .mat-mdc-option {
+  background: transparent;
+  color: var(--mat-sys-on-surface, #1f2937);
+  min-height: 40px;
+}
+
+.cdk-overlay-pane .mat-mdc-option:hover,
+.cdk-overlay-pane .mat-mdc-option.mat-mdc-option-active {
+  background: rgba(190, 24, 93, 0.08);
+}
+
+.cdk-overlay-pane .mat-mdc-option.mdc-list-item--selected {
+  background: rgba(190, 24, 93, 0.12);
+}

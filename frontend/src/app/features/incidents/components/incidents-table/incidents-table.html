@@ -1,45 +1,66 @@
-<table
-  mat-table
-  [dataSource]="incidents()"
-  class="mat-elevation-z2"
->
+<div class="incidents-table">
+  <button
+    mat-raised-button
+    [matMenuTriggerFor]="columnsMenu"
+  >
+    Columns
+  </button>
+  <mat-menu #columnsMenu="matMenu">
+    @for (column of allColumns; track column.key) {
+      <div
+        class="menu-item"
+        (click)="$event.stopPropagation()"
+      >
+        <mat-checkbox
+          [checked]="displayedColumns().includes(column.key)"
+          (change)="store.toggleColumn(column.key)"
+        >
+          {{ column.label }}
+        </mat-checkbox>
+      </div>
+    }
+  </mat-menu>
+  <table
+    mat-table
+    [dataSource]="incidents()">
 
-  @for (column of displayedColumns; track column) {
+    @for (column of displayedColumns(); track column) {
 
-    <ng-container [matColumnDef]="column">
+      <ng-container [matColumnDef]="column">
 
-      <th mat-header-cell *matHeaderCellDef>
-        {{ column }}
-      </th>
+        <th mat-header-cell *matHeaderCellDef>
+          {{ column }}
+        </th>
 
-      <td mat-cell *matCellDef="let row" class="cursor-pointer">
+        <td mat-cell *matCellDef="let row" class="cursor-pointer">
 
-        {{ formatValue(row, column) }}
+          {{ formatValue(row, column) }}
 
-      </td>
+        </td>
 
-    </ng-container>
+      </ng-container>
 
-  }
+    }
 
-  <tr
-    mat-header-row
-    *matHeaderRowDef="displayedColumns">
-  </tr>
+    <tr
+      mat-header-row
+      *matHeaderRowDef="displayedColumns()">
+    </tr>
 
-  <tr
-    mat-row
-    *matRowDef="let row; columns: displayedColumns">
-  </tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns()">
+    </tr>
 
-</table>
+  </table>
+</div>
 
-<div class="flex justify-center">
+<div class="paginator-shell">
   <mat-paginator
     [length]="store.total()"
     [pageSize]="store.pageSize()"
     [pageIndex]="store.page()"
+    [pageSizeOptions]="[5, 10, 20]"
     (page)="onPageChange($event)">
   </mat-paginator>
 </div>
-

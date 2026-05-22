@@ -16,6 +16,15 @@ export class IncidentStore{
   isLoading = signal(false);
   error = signal<string | null>(null);
 
+  displayedColumns = signal<(keyof SecurityIncident)[]>([
+  'id',
+  'title',
+  'severity',
+  'status',
+  'attackType',
+  'assignedTo',
+]);
+
   loadIncidents(): void {
     this.isLoading.set(true);
     this.error.set(null);
@@ -23,15 +32,12 @@ export class IncidentStore{
       .getIncidents(
         this.page(),
         this.pageSize()
-      )
-
-      .subscribe({
+      ).subscribe({
         next: (response) => {
           this.incidents.set(response.items);
           this.total.set(response.total);
           this.isLoading.set(false);
         },
-
         error: () => {
           this.error.set('Failed to load incidents');
           this.isLoading.set(false);
@@ -46,5 +52,28 @@ export class IncidentStore{
     this.page.set(page);
     this.pageSize.set(pageSize);
     this.loadIncidents();
+  }
+
+  toggleColumn(
+    column: keyof SecurityIncident
+  ): void {
+
+    const current = this.displayedColumns();
+
+    const exists = current.includes(column);
+
+    if (exists) {
+
+      this.displayedColumns.set(
+        current.filter(c => c !== column)
+      );
+
+      return;
+    }
+
+    this.displayedColumns.set([
+      ...current,
+      column,
+    ]);
   }
 }
