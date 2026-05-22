@@ -2,8 +2,10 @@ import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, PageEvent }
+from '@angular/material/paginator';
 
-import { IncidentStore } from '../../../../core/store/indcidents.store';
+import { IncidentStore } from '../../../../core/store/incidents.store';
 import { SecurityIncident } from '../../../../core/models/security-incident';
 
 @Component({
@@ -13,6 +15,7 @@ import { SecurityIncident } from '../../../../core/models/security-incident';
   imports: [
     CommonModule,
     MatTableModule,
+    MatPaginatorModule,
   ],
 
   styleUrl: './incidents-table.css',
@@ -48,7 +51,14 @@ export class IncidentsTableComponent {
     if (Array.isArray(value)) {
       return value.join(', ');
     }
-
+    
     return String(value);
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.store.changePage(
+      event.pageIndex,
+      event.pageSize
+    );
   }
 }

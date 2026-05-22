@@ -1,9 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
 import { SecurityIncident } from '../models/security-incident';
+import { PaginatedResponse } from '../models/paginated-response';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,18 @@ export class IncidentsService {
 
   private apiUrl = 'http://localhost:3000/api/incidents';
 
-  getIncidents(): Observable<SecurityIncident[]> {
-    return this.http.get<SecurityIncident[]>(this.apiUrl);
-  }
+  getIncidents(
+  page: number,
+  pageSize: number
+) {
+
+  const params = new HttpParams()
+    .set('page', page)
+    .set('pageSize', pageSize);
+
+  return this.http.get<PaginatedResponse<SecurityIncident>>(
+    this.apiUrl,
+    { params }
+  );
+}
 }

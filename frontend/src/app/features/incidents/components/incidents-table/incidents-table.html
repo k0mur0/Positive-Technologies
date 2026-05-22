@@ -33,3 +33,13 @@
   </tr>
 
 </table>
+
+<div class="flex justify-center">
+  <mat-paginator
+    [length]="store.total()"
+    [pageSize]="store.pageSize()"
+    [pageIndex]="store.page()"
+    (page)="onPageChange($event)">
+  </mat-paginator>
+</div>
+

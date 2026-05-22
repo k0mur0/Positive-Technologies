@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 
-import { IncidentStore } from './core/store/indcidents.store';
+import { IncidentStore } from './core/store/incidents.store';
 
 import { IncidentsTableComponent } from './features/incidents/components/incidents-table/incidents-table.component';
 
@@ -23,4 +23,6 @@ export class App implements OnInit {
 
     this.incidentStore.loadIncidents();
   }
+
+
 }
