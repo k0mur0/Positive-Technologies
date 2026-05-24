@@ -56,7 +56,19 @@ app.use(express.json());
 const PORT = 3000;
 
 app.get('/api/incidents', (req, res) => {
-  res.json(incidents);
+  const page = Number(req.query.page) || 0;
+  const pageSize = Number(req.query.pageSize) || 10;
+  const start = page * pageSize;
+  const end = start + pageSize;
+
+  const paginatedItems = incidents.slice(start, end);
+  
+  res.json({
+    items: paginatedItems,
+    total: incidents.length,
+    page,
+    pageSize,
+  });
 });
 
 app.listen(PORT, () => {

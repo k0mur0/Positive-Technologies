@@ -1,18 +1,22 @@
-import { Component, computed, inject } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule, PageEvent }
-from '@angular/material/paginator';
+import {
+  MatPaginatorModule,
+  PageEvent
+} from '@angular/material/paginator';
 
-import { MatCheckboxModule }
-from '@angular/material/checkbox';
+import { MatCheckboxModule }from '@angular/material/checkbox';
+import { MatButtonModule }from '@angular/material/button';
 
-import { MatButtonModule }
-from '@angular/material/button';
+import { MatMenuModule }from '@angular/material/menu';
 
-import { MatMenuModule }
-from '@angular/material/menu';
+import { MatIconButton } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon'
 
 import { IncidentStore } from '../../../../core/store/incidents.store';
 import { SecurityIncident } from '../../../../core/models/security-incident';
@@ -28,7 +32,9 @@ import { INCIDENT_COLUMNS } from '../../../../core/models/incident-collumns';
     MatPaginatorModule,
     MatCheckboxModule,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    MatIconButton,
+    MatIconModule
   ],
 
   styleUrl: './incidents-table.css',
