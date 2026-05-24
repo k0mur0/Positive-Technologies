@@ -16,6 +16,10 @@ export class IncidentStore{
   isLoading = signal(false);
   error = signal<string | null>(null);
 
+  sortField = signal<string>('createdAt');
+
+  sortDirection = signal<'asc' | 'desc' | ''>('');
+
   displayedColumns = signal<(keyof SecurityIncident)[]>([
   'id',
   'title',
@@ -28,11 +32,12 @@ export class IncidentStore{
   loadIncidents(): void {
     this.isLoading.set(true);
     this.error.set(null);
-    this.incidentsService
-      .getIncidents(
-        this.page(),
-        this.pageSize()
-      ).subscribe({
+    this.incidentsService.getIncidents(
+  this.page(),
+  this.pageSize(),
+  this.sortField(),
+  this.sortDirection(),
+).subscribe({
         next: (response) => {
           this.incidents.set(response.items);
           this.total.set(response.total);
@@ -75,5 +80,14 @@ export class IncidentStore{
       ...current,
       column,
     ]);
+  }
+
+  updateSorting(
+    field: string,
+    direction: 'asc' | 'desc' | ''
+  ): void {
+    this.sortField.set(field);
+    this.sortDirection.set(direction);
+    this.loadIncidents();
   }
 }

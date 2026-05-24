@@ -17,13 +17,17 @@ export class IncidentsService {
   private apiUrl = 'http://localhost:3000/api/incidents';
 
   getIncidents(
-  page: number,
-  pageSize: number
-) {
+    page: number,
+    pageSize: number,
+    sortField?: string,
+    sortDirection?: string,
+  ) {
 
   const params = new HttpParams()
     .set('page', page)
-    .set('pageSize', pageSize);
+    .set('pageSize', pageSize)
+    .set('sortField', sortField ?? '')
+    .set('sortDirection', sortDirection ?? '');
 
   return this.http.get<PaginatedResponse<SecurityIncident>>(
     this.apiUrl,

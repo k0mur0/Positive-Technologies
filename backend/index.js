@@ -16,7 +16,7 @@ const incidents = [
     attackType: 'SQL Injection',
     affectedSystems: ['Auth Service', 'Database'],
     description: 'Detected malicious SQL queries',
-    isResolved: false,
+    isResolved: true,
     riskScore: 87,
     tags: ['database', 'critical'],
     detectionMethod: 'WAF',
@@ -26,6 +26,69 @@ const incidents = [
   },
   {
     id: 'INC-002',
+    title: 'Brute Force Login',
+    severity: 'Medium',
+    status: 'Investigating',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    assignedTo: 'Alice Brown',
+    sourceIp: '172.16.0.10',
+    targetIp: '10.0.0.20',
+    country: 'Netherlands',
+    attackType: 'Brute Force',
+    affectedSystems: ['Admin Panel'],
+    description: 'Multiple failed login attempts',
+    isResolved: true,
+    riskScore: 55,
+    tags: ['authentication'],
+    detectionMethod: 'SIEM',
+    responseTime: 30,
+    attachmentsCount: 1,
+    lastActivity: new Date(),
+  },{
+    id: 'INC-003',
+    title: 'Brute Force Login',
+    severity: 'Medium',
+    status: 'Investigating',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    assignedTo: 'Alice Brown',
+    sourceIp: '172.16.0.10',
+    targetIp: '10.0.0.20',
+    country: 'Netherlands',
+    attackType: 'Brute Force',
+    affectedSystems: ['Admin Panel'],
+    description: 'Multiple failed login attempts',
+    isResolved: false,
+    riskScore: 55,
+    tags: ['authentication'],
+    detectionMethod: 'SIEM',
+    responseTime: 30,
+    attachmentsCount: 1,
+    lastActivity: new Date(),
+  },{
+    id: 'INC-004',
+    title: 'Brute Force Login',
+    severity: 'Low',
+    status: 'Investigating',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    assignedTo: 'Alice Brown',
+    sourceIp: '172.16.0.10',
+    targetIp: '10.0.0.20',
+    country: 'Netherlands',
+    attackType: 'Brute Force',
+    affectedSystems: ['Admin Panel'],
+    description: 'Multiple failed login attempts',
+    isResolved: false,
+    riskScore: 55,
+    tags: ['authentication'],
+    detectionMethod: 'SIEM',
+    responseTime: 30,
+    attachmentsCount: 1,
+    lastActivity: new Date(),
+  },{
+    id: 'INC-005',
     title: 'Brute Force Login',
     severity: 'Medium',
     status: 'Investigating',
@@ -60,8 +123,43 @@ app.get('/api/incidents', (req, res) => {
   const pageSize = Number(req.query.pageSize) || 10;
   const start = page * pageSize;
   const end = start + pageSize;
+  const sortField = req.query.sortField;
+  const sortDirection = req.query.sortDirection;
 
-  const paginatedItems = incidents.slice(start, end);
+  let sortedIncidents = [...incidents];
+
+  const severityOrder = {
+    High: 1,
+    Medium: 2,
+    Low: 3,
+  };
+
+  if (sortField && sortDirection) {
+
+    sortedIncidents.sort((a, b) => {
+
+      let aValue = a[sortField];
+      let bValue = b[sortField];
+
+
+      if (sortField === 'severity') {
+        aValue = severityOrder[aValue];
+        bValue = severityOrder[bValue];
+      }
+
+      if (aValue < bValue) {
+        return sortDirection === 'asc' ? -1 : 1;
+      }
+
+      if (aValue > bValue) {
+        return sortDirection === 'asc' ? 1 : -1;
+      }
+
+      return 0;
+    });
+}
+
+  const paginatedItems = sortedIncidents.slice(start, end);
   
   res.json({
     items: paginatedItems,

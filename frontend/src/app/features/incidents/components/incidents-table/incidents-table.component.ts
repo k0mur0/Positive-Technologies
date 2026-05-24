@@ -3,20 +3,28 @@ import {
   computed,
   inject
 } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import {
   MatPaginatorModule,
   PageEvent
 } from '@angular/material/paginator';
-
 import { MatCheckboxModule }from '@angular/material/checkbox';
 import { MatButtonModule }from '@angular/material/button';
-
 import { MatMenuModule }from '@angular/material/menu';
-
 import { MatIconButton } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon'
+import { MatIconModule } from '@angular/material/icon';
+import {
+  MatSort,
+  Sort,
+  MatSortModule
+} from '@angular/material/sort';
+import { MatTooltip } from '@angular/material/tooltip';
+import {MatToolbar} from '@angular/material/toolbar'
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {FormsModule} from '@angular/forms';
 
 import { IncidentStore } from '../../../../core/store/incidents.store';
 import { SecurityIncident } from '../../../../core/models/security-incident';
@@ -31,10 +39,16 @@ import { INCIDENT_COLUMNS } from '../../../../core/models/incident-collumns';
     MatTableModule,
     MatPaginatorModule,
     MatCheckboxModule,
-    MatButtonModule,
     MatMenuModule,
     MatIconButton,
-    MatIconModule
+    MatIconModule,
+    MatSort,
+    MatSortModule,
+    MatTooltip,
+    MatToolbar,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
 
   styleUrl: './incidents-table.css',
@@ -72,6 +86,14 @@ export class IncidentsTableComponent {
     this.store.changePage(
       event.pageIndex,
       event.pageSize
+    );
+  }
+
+  onSortChange(sort: Sort): void {
+
+    this.store.updateSorting(
+      sort.active,
+      sort.direction
     );
   }
 }

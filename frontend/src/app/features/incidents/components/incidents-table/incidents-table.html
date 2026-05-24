@@ -1,63 +1,75 @@
 <div class="incidents-table">
-  <div class="w-full px-4 flex justify-end">
-    <button
-      mat-icon-button
-      [matMenuTriggerFor]="columnsMenu"
-    >
-      <mat-icon>view_headline</mat-icon>
-    </button>
-  </div>
-  <mat-menu #columnsMenu="matMenu">
-    <div class="h-60 relative">
-      <h3 class="p-2">Select collumns:</h3>
-      @for (column of allColumns; track column.key) {
-        <div
-          class="menu-item"
-          (click)="$event.stopPropagation()"
-        >
-          <mat-checkbox
-            [checked]="displayedColumns().includes(column.key)"
-            (change)="store.toggleColumn(column.key)"
-          >
-            {{ column.label }}
-          </mat-checkbox>
-        </div>
-      }
+  <mat-toolbar>
+    <div class="w-full px-4 flex items-center justify-end">
+      <mat-form-field class="w-full max-w-100 min-w-40">
+        <mat-label>Search incident...</mat-label>
+        <input matInput value="">
+      </mat-form-field>
+      <button
+        mat-icon-button
+        matTooltip="Filter"
+        [matMenuTriggerFor]="filterMenu"
+      >
+        <mat-icon>filter_list</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        matTooltip="Collumns"
+        [matMenuTriggerFor]="columnsMenu"
+      >
+        <mat-icon>view_headline</mat-icon>
+      </button>
     </div>
-  </mat-menu>
+    <mat-menu #columnsMenu="matMenu">
+      <div class="h-60">
+        <h3 class="p-2">Select collumns:</h3>
+        @for (column of allColumns; track column.key) {
+          <div
+            class="menu-item"
+            (click)="$event.stopPropagation()"
+          >
+            <mat-checkbox
+              [disabled]="column.key === 'id'"
+              [checked]="displayedColumns().includes(column.key)"
+              (change)="store.toggleColumn(column.key)"
+            >
+              {{ column.label }}
+            </mat-checkbox>
+          </div>
+        }
+      </div>
+    </mat-menu>
+    <mat-menu #filterMenu="matMenu">
+        <div class="h-60">
+          <h3 class="p-2">Set filters:</h3>
+        </div>
+    </mat-menu>
+  </mat-toolbar>
+
   <div class="table-wrapper">
     <table
       mat-table
+      matSort
+      (matSortChange)="onSortChange($event)"
       [dataSource]="incidents()">
-
       @for (column of displayedColumns(); track column) {
-
         <ng-container [matColumnDef]="column">
-
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort">
             {{ column }}
           </th>
-
           <td mat-cell *matCellDef="let row" class="cursor-pointer">
-
             {{ formatValue(row, column) }}
-
           </td>
-
         </ng-container>
-
       }
-
       <tr
         mat-header-row
         *matHeaderRowDef="displayedColumns()">
       </tr>
-
       <tr
         mat-row
         *matRowDef="let row; columns: displayedColumns()">
       </tr>
-
     </table>
   </div>
 
