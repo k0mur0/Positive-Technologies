@@ -11,9 +11,8 @@ import {
   PageEvent
 } from '@angular/material/paginator';
 import { MatCheckboxModule }from '@angular/material/checkbox';
-import { MatButtonModule }from '@angular/material/button';
 import { MatMenuModule }from '@angular/material/menu';
-import { MatIconButton } from '@angular/material/button';
+import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {
   MatSort,
@@ -25,10 +24,18 @@ import {MatToolbar} from '@angular/material/toolbar'
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule} from '@angular/forms';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { IncidentStore } from '../../../../core/store/incidents.store';
 import { SecurityIncident } from '../../../../core/models/security-incident';
 import { INCIDENT_COLUMNS } from '../../../../core/models/incident-collumns';
+import { IncidentFilters } from '../../../../core/models/incidents-filter';
+
 
 @Component({
   selector: 'app-incidents-table',
@@ -48,7 +55,14 @@ import { INCIDENT_COLUMNS } from '../../../../core/models/incident-collumns';
     MatToolbar,
     FormsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatSliderModule,
+    MatSlideToggleModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatButtonToggleModule,
+    MatButton,
+    ReactiveFormsModule
   ],
 
   styleUrl: './incidents-table.css',
@@ -58,11 +72,20 @@ import { INCIDENT_COLUMNS } from '../../../../core/models/incident-collumns';
 export class IncidentsTableComponent {
 
   store = inject(IncidentStore);
+  private fb = inject(FormBuilder);
+
+  filtersForm = this.fb.nonNullable.group({
+    showResolved: false,
+    severity: '',
+    startDate: null as Date | null,
+    endDate: null as Date | null
+  });
 
   readonly displayedColumns = this.store.displayedColumns;
   readonly allColumns = INCIDENT_COLUMNS;
 
   incidents = computed(() => this.store.incidents());
+  
 
   formatValue(
     row: SecurityIncident,
@@ -95,5 +118,36 @@ export class IncidentsTableComponent {
       sort.active,
       sort.direction
     );
+  }
+
+  onSearchChange(value: string): void {
+    this.store.updateSearch(value);
+  }
+  
+  applyFilters(): void {
+
+    const filters = this.normalizeFilters(
+      this.filtersForm.getRawValue()
+    );
+
+    this.store.updateFilters(filters);
+  }
+
+  private normalizeFilters(filters: IncidentFilters): IncidentFilters {
+    const startDate = filters.startDate
+      ? new Date(filters.startDate)
+      : null;
+    const endDate = filters.endDate
+      ? new Date(filters.endDate)
+      : null;
+
+    startDate?.setHours(0, 0, 0, 0);
+    endDate?.setHours(23, 59, 59, 999);
+
+    return {
+      ...filters,
+      startDate,
+      endDate,
+    };
   }
 }

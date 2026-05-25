@@ -3,7 +3,7 @@
     <div class="w-full px-4 flex items-center justify-end">
       <mat-form-field class="w-full max-w-100 min-w-40">
         <mat-label>Search incident...</mat-label>
-        <input matInput value="">
+        <input matInput (input)="onSearchChange($event.target.value)" [value]="store.search()">
       </mat-form-field>
       <button
         mat-icon-button
@@ -20,12 +20,12 @@
         <mat-icon>view_headline</mat-icon>
       </button>
     </div>
-    <mat-menu #columnsMenu="matMenu">
-      <div class="h-60">
-        <h3 class="p-2">Select collumns:</h3>
+    <mat-menu #columnsMenu="matMenu" class="h-80 p-2">
+      <div>
+        <h3 class="text-xl font-bold mb-4">Select collumns:</h3>
+        <div class="bg-white p-2 mb-2 rounded-xl">
         @for (column of allColumns; track column.key) {
           <div
-            class="menu-item"
             (click)="$event.stopPropagation()"
           >
             <mat-checkbox
@@ -37,11 +37,62 @@
             </mat-checkbox>
           </div>
         }
+        </div>
       </div>
     </mat-menu>
-    <mat-menu #filterMenu="matMenu">
-        <div class="h-60">
-          <h3 class="p-2">Set filters:</h3>
+    <mat-menu #filterMenu="matMenu" class="h-80 w-100 p-2">
+        <div
+          (click)="$event.stopPropagation()"
+        >
+          <form [formGroup]="filtersForm">
+            <div class="bg-white p-2 rounded-xl mb-2">
+              <p><mat-slide-toggle labelPosition="before" formControlName="showResolved">Show resolved:</mat-slide-toggle></p>
+            </div>
+            <div class="bg-white p-2 rounded-xl mb-2">
+              <mat-form-field class="w-full">
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                  <input matStartDate placeholder="Start date" formControlName="startDate">
+                  <input matEndDate placeholder="End date" formControlName="endDate">
+                </mat-date-range-input>
+                <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="picker">
+                </mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+              </mat-form-field>
+            </div>
+
+            <div class="bg-white p-2 rounded-xl mb-2">
+              <p class="text-sm font-medium mb-2 text-center">
+                Severity
+              </p>
+              <div class="flex justify-center">
+                <mat-button-toggle-group
+                  name="severity"
+                  formControlName="severity"
+                >
+                  <mat-button-toggle value="Low">
+                    Low
+                  </mat-button-toggle>
+                  <mat-button-toggle value="Medium">
+                    Medium
+                  </mat-button-toggle>
+                  <mat-button-toggle value="High">
+                    High
+                  </mat-button-toggle>
+                  <mat-button-toggle value="Critical">
+                    Critical
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+            </div>
+          </form>
+          <div class="flex justify-end gap-1">
+            <button mat-button="tonal" mat-menu-close >Cancel</button>
+            <button matButton="filled" mat-menu-close (click)="applyFilters()">Accept</button>
+          </div>
         </div>
     </mat-menu>
   </mat-toolbar>
@@ -72,7 +123,6 @@
       </tr>
     </table>
   </div>
-
 </div>
 
 <div class="paginator-shell">

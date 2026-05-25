@@ -1,6 +1,14 @@
 import { inject, Injectable, signal } from "@angular/core";
 import { IncidentsService } from "../services/incidents-service";
 import { SecurityIncident } from "../models/security-incident";
+import { IncidentFilters } from "../models/incidents-filter";
+
+const initFilter: IncidentFilters = {
+  showResolved: false,
+  severity: '',
+  startDate: null,
+  endDate: null
+};
 
 @Injectable({
   providedIn: `root`,
@@ -17,27 +25,31 @@ export class IncidentStore{
   error = signal<string | null>(null);
 
   sortField = signal<string>('createdAt');
-
   sortDirection = signal<'asc' | 'desc' | ''>('');
+  search=signal('');
+
+  readonly filters = signal<IncidentFilters>(initFilter);
 
   displayedColumns = signal<(keyof SecurityIncident)[]>([
-  'id',
-  'title',
-  'severity',
-  'status',
-  'attackType',
-  'assignedTo',
-]);
+    'id',
+    'title',
+    'severity',
+    'status',
+    'attackType',
+    'assignedTo',
+  ]);
 
   loadIncidents(): void {
     this.isLoading.set(true);
     this.error.set(null);
     this.incidentsService.getIncidents(
-  this.page(),
-  this.pageSize(),
-  this.sortField(),
-  this.sortDirection(),
-).subscribe({
+      this.search(),
+      this.page(),
+      this.pageSize(),
+      this.filters(),
+      this.sortField(),
+      this.sortDirection(),
+    ).subscribe({
         next: (response) => {
           this.incidents.set(response.items);
           this.total.set(response.total);
@@ -89,5 +101,23 @@ export class IncidentStore{
     this.sortField.set(field);
     this.sortDirection.set(direction);
     this.loadIncidents();
+  }
+
+  updateSearch(value: string): void {
+    this.search.set(value);
+    this.loadIncidents();
+  }
+
+  updateFilters(filters: IncidentFilters): void {
+
+    this.filters.set(filters);
+
+    this.page.set(0);
+
+    this.loadIncidents();
+  }
+
+  resetFilter(): void {
+    this.filters.set(initFilter);
   }
 }

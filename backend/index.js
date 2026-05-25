@@ -119,24 +119,65 @@ app.use(express.json());
 const PORT = 3000;
 
 app.get('/api/incidents', (req, res) => {
+  const search = (req.query.search || '').toLowerCase();
   const page = Number(req.query.page) || 0;
   const pageSize = Number(req.query.pageSize) || 10;
   const start = page * pageSize;
   const end = start + pageSize;
   const sortField = req.query.sortField;
   const sortDirection = req.query.sortDirection;
+  const showResolved = req.query.showResolved;
+  const isResolved = req.query.isResolved;
+  const severity = req.query.severity;
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
 
-  let sortedIncidents = [...incidents];
+  let resultIncidents = [...incidents];
 
   const severityOrder = {
-    High: 1,
-    Medium: 2,
-    Low: 3,
+    Critical: 1,
+    High: 2,
+    Medium: 3,
+    Low: 4,
   };
+
+  if (search) {
+    resultIncidents = resultIncidents.filter(incident => incident.id.toLowerCase().includes(search) || incident.title.toLowerCase().includes(search));
+  }
+
+  if (severity) {
+    resultIncidents = resultIncidents.filter(
+      incident => incident.severity === severity
+    );
+  }
+
+  if (isResolved !== undefined) {
+    const resolvedBool = isResolved === 'true';
+    resultIncidents = resultIncidents.filter(
+      incident => incident.isResolved === resolvedBool
+    );
+  } else if (showResolved === 'false') {
+    resultIncidents = resultIncidents.filter(
+      incident => !incident.isResolved
+    );
+  }
+
+  if (startDate) {
+    const startDateFilter = new Date(startDate);
+    resultIncidents = resultIncidents.filter(
+      incident => new Date(incident.createdAt) >= startDateFilter
+    );
+  }
+  if (endDate) {
+    const endDateFilter = new Date(endDate);
+    resultIncidents = resultIncidents.filter(
+      incident => new Date(incident.createdAt) <= endDateFilter
+    );
+  }
 
   if (sortField && sortDirection) {
 
-    sortedIncidents.sort((a, b) => {
+    resultIncidents.sort((a, b) => {
 
       let aValue = a[sortField];
       let bValue = b[sortField];
@@ -159,11 +200,11 @@ app.get('/api/incidents', (req, res) => {
     });
 }
 
-  const paginatedItems = sortedIncidents.slice(start, end);
+  const paginatedItems = resultIncidents.slice(start, end);
   
   res.json({
     items: paginatedItems,
-    total: incidents.length,
+    total: resultIncidents.length,
     page,
     pageSize,
   });
