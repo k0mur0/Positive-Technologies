@@ -82,15 +82,12 @@
                   <mat-button-toggle value="High">
                     High
                   </mat-button-toggle>
-                  <mat-button-toggle value="Critical">
-                    Critical
-                  </mat-button-toggle>
                 </mat-button-toggle-group>
               </div>
             </div>
           </form>
           <div class="flex justify-end gap-1">
-            <button mat-button="tonal" mat-menu-close >Cancel</button>
+            <button mat-button="tonal" mat-menu-close (click)="resetFilters()">Cancel</button>
             <button matButton="filled" mat-menu-close (click)="applyFilters()">Accept</button>
           </div>
         </div>

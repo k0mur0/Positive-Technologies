@@ -36,6 +36,12 @@ import { SecurityIncident } from '../../../../core/models/security-incident';
 import { INCIDENT_COLUMNS } from '../../../../core/models/incident-collumns';
 import { IncidentFilters } from '../../../../core/models/incidents-filter';
 
+const INITIAL_FILTERS: IncidentFilters = {
+  showResolved: false,
+  severity: '',
+  startDate: null,
+  endDate: null
+};
 
 @Component({
   selector: 'app-incidents-table',
@@ -75,10 +81,10 @@ export class IncidentsTableComponent {
   private fb = inject(FormBuilder);
 
   filtersForm = this.fb.nonNullable.group({
-    showResolved: false,
-    severity: '',
-    startDate: null as Date | null,
-    endDate: null as Date | null
+    showResolved: INITIAL_FILTERS.showResolved,
+    severity: INITIAL_FILTERS.severity,
+    startDate: INITIAL_FILTERS.startDate,
+    endDate: INITIAL_FILTERS.endDate
   });
 
   readonly displayedColumns = this.store.displayedColumns;
@@ -123,6 +129,11 @@ export class IncidentsTableComponent {
   onSearchChange(value: string): void {
     this.store.updateSearch(value);
   }
+
+  resetFilters(): void {
+    this.filtersForm.reset(INITIAL_FILTERS);
+    this.store.resetFilter();
+}
   
   applyFilters(): void {
 

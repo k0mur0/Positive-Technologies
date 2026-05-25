@@ -109,15 +109,14 @@ export class IncidentStore{
   }
 
   updateFilters(filters: IncidentFilters): void {
-
     this.filters.set(filters);
-
     this.page.set(0);
-
     this.loadIncidents();
   }
 
   resetFilter(): void {
     this.filters.set(initFilter);
+    this.page.set(0);
+    this.loadIncidents();
   }
 }

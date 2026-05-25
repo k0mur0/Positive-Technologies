@@ -1,7 +1,7 @@
 export interface SecurityIncident {
   id: string;
   title: string;
-  severity: 'Low' | 'Medium' | 'High' | 'Critical';
+  severity: 'Low' | 'Medium' | 'High' ;
   status: 'Open' | 'Investigating' | 'Resolved';
   createdAt: Date;
   updatedAt: Date;
