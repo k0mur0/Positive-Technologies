@@ -1,35 +1,34 @@
 <div class="p-4">
-  <div class="flex justiyf-between">
+  <div class="flex justify-between items-start gap-4 mb-4">
     <div>
-      <h2 class="font-bold text-4xl">{{incident.title}}</h2>
-      <span>{{incident.id}}</span>
+      <h2 class="font-bold text-4xl">{{ incident.title }}</h2>
+      <span class="text-sm text-gray-600">{{ incident.id }}</span>
     </div>
-    <div class="flex flex-col justify-between">
-      <p>{{incident.createdAt.toString().slice(0,10).split('-').join('.')}}</p>
-      @if (incident.assignedTo) {
-        <p class="font-bold">{{incident.assignedTo}}</p>
-      }
+    <div class="button-group">
+      <button mat-icon-button color="primary" aria-label="Edit incident" (click)="edit.emit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" aria-label="Delete incident" (click)="delete.emit()">
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
   </div>
   <mat-divider></mat-divider>
   <div class="mt-4">
     <div class="flex flex-row gap-1 flex-wrap mb-2">
-      @for (tag of incident.tags; track tag) {
-        <span class="p-1.5 border-1 rounded-2xl ">{{tag}}</span>
-      }
+      <span *ngFor="let tag of incident.tags" class="p-1.5 border rounded-full text-sm">{{ tag }}</span>
     </div>
-    <p class="text-[16px] mb-2"><span class="font-bold">Description: </span>{{incident.description}}</p>
-    <p class="text-[16px] mb-2"><span class="font-bold">Country: </span>{{incident.country}}</p>
-    <p class="text-[16px] mb-2"><span class="font-bold">Severity: </span>{{incident.severity}}</p>
-    <p class="text-[16px] mb-2"><span class="font-bold">Risk score: </span>{{incident.riskScore}}</p>
-    <p class="text-[16px] mb-2"><span class="font-bold">Attack type: </span>{{incident.attackType}}</p>
-    <p class="text-[16px] mb-2"><span class="font-bold">Affected systems: </span>{{incident.affectedSystems.join(', ')}}</p>
-    <p class="text-[16px] mb-2"><span class="font-bold">Detection method: </span>{{incident.detectionMethod}}</p>
-    <p class="text-[16px] mb-2"><span class="font-bold">Response time: </span>{{incident.responseTime}}</p>
-    <p class="text-[16px] mb-2"><span class="font-bold">Attachments count: </span>{{incident.attachmentsCount}}</p>
-
-    <p class="text-[16px] mb-2"><span class="font-bold">Source IP: </span>{{incident.sourceIp}}</p>
-    <p class="text-[16px] mb-2"><span class="font-bold">Target IP: </span>{{incident.targetIp}}</p>
-    <p class="text-[16px] mb-2"><span class="font-bold">Last activity: </span>{{incident.lastActivity.toString().slice(0,10).split('-').join('.')}}</p>
+    <p class="text-[16px] mb-2"><span class="font-bold">Description: </span>{{ incident.description }}</p>
+    <p class="text-[16px] mb-2"><span class="font-bold">Country: </span>{{ incident.country }}</p>
+    <p class="text-[16px] mb-2"><span class="font-bold">Severity: </span>{{ incident.severity }}</p>
+    <p class="text-[16px] mb-2"><span class="font-bold">Risk score: </span>{{ incident.riskScore }}</p>
+    <p class="text-[16px] mb-2"><span class="font-bold">Attack type: </span>{{ incident.attackType }}</p>
+    <p class="text-[16px] mb-2"><span class="font-bold">Affected systems: </span>{{ incident.affectedSystems.join(', ') }}</p>
+    <p class="text-[16px] mb-2"><span class="font-bold">Detection method: </span>{{ incident.detectionMethod }}</p>
+    <p class="text-[16px] mb-2"><span class="font-bold">Response time: </span>{{ incident.responseTime }} min</p>
+    <p class="text-[16px] mb-2"><span class="font-bold">Attachments count: </span>{{ incident.attachmentsCount }}</p>
+    <p class="text-[16px] mb-2"><span class="font-bold">Source IP: </span>{{ incident.sourceIp }}</p>
+    <p class="text-[16px] mb-2"><span class="font-bold">Target IP: </span>{{ incident.targetIp }}</p>
+    <p class="text-[16px] mb-2"><span class="font-bold">Last activity: </span>{{ incident.lastActivity.toLocaleDateString() }}</p>
   </div>
 </div>

@@ -1,19 +1,19 @@
-import { inject, Injectable, signal } from "@angular/core";
-import { IncidentsService } from "../services/incidents-service";
-import { SecurityIncident } from "../models/security-incident";
-import { IncidentFilters } from "../models/incidents-filter";
+import { inject, Injectable, signal } from '@angular/core';
+import { IncidentsService } from '../services/incidents-service';
+import { SecurityIncident } from '../models/security-incident';
+import { IncidentFilters } from '../models/incidents-filter';
 
 const initFilter: IncidentFilters = {
   showResolved: false,
   severity: '',
   startDate: null,
-  endDate: null
+  endDate: null,
 };
 
 @Injectable({
-  providedIn: `root`,
+  providedIn: 'root',
 })
-export class IncidentStore{
+export class IncidentStore {
   private incidentsService = inject(IncidentsService);
 
   page = signal(0);
@@ -27,7 +27,7 @@ export class IncidentStore{
 
   sortField = signal<string>('createdAt');
   sortDirection = signal<'asc' | 'desc' | ''>('');
-  search=signal('');
+  search = signal('');
 
   readonly filters = signal<IncidentFilters>(initFilter);
 
@@ -43,14 +43,16 @@ export class IncidentStore{
   loadIncidents(): void {
     this.isLoading.set(true);
     this.error.set(null);
-    this.incidentsService.getIncidents(
-      this.search(),
-      this.page(),
-      this.pageSize(),
-      this.filters(),
-      this.sortField(),
-      this.sortDirection(),
-    ).subscribe({
+    this.incidentsService
+      .getIncidents(
+        this.search(),
+        this.page(),
+        this.pageSize(),
+        this.filters(),
+        this.sortField(),
+        this.sortDirection(),
+      )
+      .subscribe({
         next: (response) => {
           this.incidents.set(response.items);
           this.total.set(response.total);
@@ -63,42 +65,25 @@ export class IncidentStore{
       });
   }
 
-  changePage(
-    page: number,
-    pageSize: number
-  ): void {
+  changePage(page: number, pageSize: number): void {
     this.page.set(page);
     this.pageSize.set(pageSize);
     this.loadIncidents();
   }
 
-  toggleColumn(
-    column: keyof SecurityIncident
-  ): void {
-
+  toggleColumn(column: keyof SecurityIncident): void {
     const current = this.displayedColumns();
-
     const exists = current.includes(column);
 
     if (exists) {
-
-      this.displayedColumns.set(
-        current.filter(c => c !== column)
-      );
-
+      this.displayedColumns.set(current.filter((c) => c !== column));
       return;
     }
 
-    this.displayedColumns.set([
-      ...current,
-      column,
-    ]);
+    this.displayedColumns.set([...current, column]);
   }
 
-  updateSorting(
-    field: string,
-    direction: 'asc' | 'desc' | ''
-  ): void {
+  updateSorting(field: string, direction: 'asc' | 'desc' | ''): void {
     this.sortField.set(field);
     this.sortDirection.set(direction);
     this.loadIncidents();
@@ -121,17 +106,68 @@ export class IncidentStore{
     this.loadIncidents();
   }
 
+  createIncident(incident: SecurityIncident): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+    this.incidentsService.createIncident(incident).subscribe({
+      next: () => {
+        this.selectedIncident.set(null);
+        this.loadIncidents();
+      },
+      error: () => {
+        this.error.set('Failed to create incident');
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  updateIncident(incident: SecurityIncident): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+    this.incidentsService.updateIncident(incident).subscribe({
+      next: () => {
+        if (this.selectedIncident()?.id === incident.id) {
+          this.selectedIncident.set({ ...incident });
+        }
+        this.loadIncidents();
+      },
+      error: () => {
+        this.error.set('Failed to update incident');
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  deleteIncident(id: string): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+    this.incidentsService.deleteIncident(id).subscribe({
+      next: () => {
+        if (this.selectedIncident()?.id === id) {
+          this.selectedIncident.set(null);
+        }
+        this.loadIncidents();
+      },
+      error: () => {
+        this.error.set('Failed to delete incident');
+        this.isLoading.set(false);
+      },
+    });
+  }
+
   getIncident(id: string): void {
     this.isLoading.set(true);
-    this.error.set('');
-    this.incidentsService.getIncident(id)
-      .subscribe({
-        next: (response) => {
-          this.selectedIncident.set({...response})
-        },
-        error: (err) => {
-          console.error(err)
-        }
-      })
+    this.error.set(null);
+    this.incidentsService.getIncident(id).subscribe({
+      next: (response) => {
+        this.selectedIncident.set({ ...response });
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        this.error.set('Failed to load incident details');
+        console.error(err);
+        this.isLoading.set(false);
+      },
+    });
   }
 }
