@@ -1,7 +1,8 @@
 import {
   Component,
   computed,
-  inject
+  inject,
+  signal
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
@@ -30,11 +31,14 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { IncidentStore } from '../../../../core/store/incidents.store';
 import { SecurityIncident } from '../../../../core/models/security-incident';
 import { INCIDENT_COLUMNS } from '../../../../core/models/incident-collumns';
 import { IncidentFilters } from '../../../../core/models/incidents-filter';
+
+import { IncidentWindow } from '../incident-window/incident-window';
 
 const INITIAL_FILTERS: IncidentFilters = {
   showResolved: false,
@@ -68,7 +72,9 @@ const INITIAL_FILTERS: IncidentFilters = {
     MatNativeDateModule,
     MatButtonToggleModule,
     MatButton,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSidenavModule,
+    IncidentWindow
   ],
 
   styleUrl: './incidents-table.css',
@@ -92,6 +98,7 @@ export class IncidentsTableComponent {
 
   incidents = computed(() => this.store.incidents());
   
+  isDetailsOpened = signal(false);
 
   formatValue(
     row: SecurityIncident,
@@ -142,6 +149,11 @@ export class IncidentsTableComponent {
     );
 
     this.store.updateFilters(filters);
+  }
+
+  onSelectIncident(id: string): void {
+    this.store.getIncident(id);
+    this.isDetailsOpened.set(true);
   }
 
   private normalizeFilters(filters: IncidentFilters): IncidentFilters {

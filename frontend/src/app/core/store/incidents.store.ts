@@ -21,6 +21,7 @@ export class IncidentStore{
   total = signal(0);
 
   incidents = signal<SecurityIncident[]>([]);
+  selectedIncident = signal<SecurityIncident | null>(null);
   isLoading = signal(false);
   error = signal<string | null>(null);
 
@@ -118,5 +119,19 @@ export class IncidentStore{
     this.filters.set(initFilter);
     this.page.set(0);
     this.loadIncidents();
+  }
+
+  getIncident(id: string): void {
+    this.isLoading.set(true);
+    this.error.set('');
+    this.incidentsService.getIncident(id)
+      .subscribe({
+        next: (response) => {
+          this.selectedIncident.set({...response})
+        },
+        error: (err) => {
+          console.error(err)
+        }
+      })
   }
 }

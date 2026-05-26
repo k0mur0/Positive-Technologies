@@ -25,32 +25,36 @@ export class IncidentsService {
     sortField?: string,
     sortDirection?: string,
   ) {
-  let params = new HttpParams()
-    .set('search', search)
-    .set('page', page)
-    .set('pageSize', pageSize)
-    .set('sortField', sortField ?? '')
-    .set('sortDirection', sortDirection ?? '')
-    .set('severity', filters.severity)
-    .set('showResolved', filters.showResolved.toString())
-    
-    if (filters.startDate) {
-      params = params.set(
-        'startDate',
-        filters.startDate.toISOString()
-      );
-    }
+    let params = new HttpParams()
+      .set('search', search)
+      .set('page', page)
+      .set('pageSize', pageSize)
+      .set('sortField', sortField ?? '')
+      .set('sortDirection', sortDirection ?? '')
+      .set('severity', filters.severity)
+      .set('showResolved', filters.showResolved.toString())
+      
+      if (filters.startDate) {
+        params = params.set(
+          'startDate',
+          filters.startDate.toISOString()
+        );
+      }
 
-    if (filters.endDate) {
-      params = params.set(
-        'endDate',
-        filters.endDate.toISOString()
-      );
-    }
+      if (filters.endDate) {
+        params = params.set(
+          'endDate',
+          filters.endDate.toISOString()
+        );
+      }
 
-  return this.http.get<PaginatedResponse<SecurityIncident>>(
-    this.apiUrl,
-    { params }
-  );
-}
+    return this.http.get<PaginatedResponse<SecurityIncident>>(
+      this.apiUrl,
+      { params }
+    );
+  }
+
+  getIncident(id: string) {
+    return this.http.get<SecurityIncident>(`${this.apiUrl}/${id}`);
+  }
 }

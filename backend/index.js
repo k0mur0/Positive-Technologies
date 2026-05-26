@@ -210,6 +210,20 @@ app.get('/api/incidents', (req, res) => {
   });
 });
 
+app.get('/api/incidents/:id', (req, res) => {
+  const id = req.params.id;
+
+  const incident = incidents.find(incident => id === incident.id);
+
+  if (!incident) {
+    return res.status(404).json({
+      message: 'Incident not found'
+    });
+  }
+
+  res.json(incident);
+})
+
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
