@@ -1,0 +1,17 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title class="pr-2">Notifications</mat-card-title>
+    <span class="count-badge">{{ notifications().length }}</span>
+  </mat-card-header>
+  <mat-card-content>
+    <div *ngIf="notifications().length === 0" class="empty-state">No notifications yet.</div>
+    <mat-list *ngIf="notifications().length > 0">
+      <mat-list-item *ngFor="let notification of notifications()">
+        <div class="notification-item">
+          <div class="notification-message">{{ notification.message }}</div>
+          <div class="notification-meta">{{ notification.createdAt.toLocaleString() }}</div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

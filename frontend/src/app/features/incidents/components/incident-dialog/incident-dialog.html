@@ -1,0 +1,120 @@
+<div class="p-2">
+  <h2 mat-dialog-title>{{ isEditMode ? 'Edit incident' : 'Create incident' }}</h2>
+  <form [formGroup]="incidentForm" class="incident-dialog-form" (ngSubmit)="save()">
+    <div class="field-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Severity</mat-label>
+        <mat-select formControlName="severity">
+          <mat-option *ngFor="let severity of severityOptions" [value]="severity">{{ severity }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option *ngFor="let status of statusOptions" [value]="status">{{ status }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Assigned to</mat-label>
+        <input matInput formControlName="assignedTo" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Country</mat-label>
+        <mat-select formControlName="country">
+          <mat-option *ngFor="let country of countryOptions" [value]="country">{{ country }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Attack type</mat-label>
+        <input matInput formControlName="attackType" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Risk score</mat-label>
+        <input matInput type="number" formControlName="riskScore" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Response time (minutes)</mat-label>
+        <input matInput type="number" formControlName="responseTime" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Attachments count</mat-label>
+        <input matInput type="number" formControlName="attachmentsCount" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Source IP</mat-label>
+        <input matInput formControlName="sourceIp" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Target IP</mat-label>
+        <input matInput formControlName="targetIp" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Detection method</mat-label>
+        <input matInput formControlName="detectionMethod" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Affected systems</mat-label>
+        <mat-select formControlName="affectedSystems" multiple>
+          <mat-option *ngFor="let system of systemOptions" [value]="system">{{ system }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tags</mat-label>
+        <mat-select formControlName="tags" multiple>
+          <mat-option *ngFor="let tag of tagOptions" [value]="tag">{{ tag }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput rows="4" formControlName="description"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Created at</mat-label>
+        <input matInput [matDatepicker]="createdPicker" formControlName="createdAt" />
+        <mat-datepicker-toggle matSuffix [for]="createdPicker"></mat-datepicker-toggle>
+        <mat-datepicker #createdPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Updated at</mat-label>
+        <input matInput [matDatepicker]="updatedPicker" formControlName="updatedAt" />
+        <mat-datepicker-toggle matSuffix [for]="updatedPicker"></mat-datepicker-toggle>
+        <mat-datepicker #updatedPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Last activity</mat-label>
+        <input matInput [matDatepicker]="activityPicker" formControlName="lastActivity" />
+        <mat-datepicker-toggle matSuffix [for]="activityPicker"></mat-datepicker-toggle>
+        <mat-datepicker #activityPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-slide-toggle formControlName="isResolved">Resolved</mat-slide-toggle>
+    </div>
+
+    <div mat-dialog-actions>
+      <button mat-button type="button" color="inherit" (click)="cancel()">Cancel</button>
+      <button mat-button type="button" color="warn" *ngIf="isEditMode" (click)="delete()">Delete</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="incidentForm.invalid">Save</button>
+    </div>
+  </form>
+</div>
